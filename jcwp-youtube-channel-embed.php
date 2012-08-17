@@ -82,7 +82,7 @@
             "embedType"=>"frame",
             ),$atts));
         $uniq_id = uniqid("jvorgyt_");
-        return "<div id='$uniq_id'></div>
+        return "<div id='$uniq_id'></div><dic style='clear:both'>&nbsp;</div>
              <script type=\"text/javascript\">
                     jQuery(document).ready(function(){
                         jQuery(\"#$uniq_id\").jcorgYoutubeUserChannelEmbed({
@@ -281,6 +281,7 @@
     function jcorgytceDonationDetail() {
         ?>    
         <style type="text/css"> .jcorgcr_donation_uses li {float:left; margin-left:20px;font-weight: bold;} </style> 
+
         <div style="padding: 10px; background: #f1f1f1;border:1px #EEE solid; border-radius:15px;width:98%"> 
         <h2>If you like this Plugin, please consider donating a small amount.</h2> 
         You can choose your own amount. Developing this awesome plugin took a lot of effort and time; days and weeks of continuous voluntary unpaid work. 
