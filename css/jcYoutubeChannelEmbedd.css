@@ -1,12 +1,13 @@
 ul.jcorg-yt-thumbnails,.jcorg-yt-list {
-	list-style:none;
+	list-style:none !important;
 	clear:both;
 	margin:0;
 	padding:0;
 }
 ul.jcorg-yt-thumbnails li{
+	list-style:none !important;
 	float:left;
-	line-height:150%;
+	line-height:110%;
 	margin:10px;
 }
 .jcorg-yt-thumbnail img:hover{
@@ -31,4 +32,9 @@ ul.jcorg-yt-thumbnails li{
 	font-family:Calibri,arial;
 	font-size:28px;
 	line-height:200%;
+}
+
+.jcorg-yt-list li {
+list-style:none !important;
+
 }
