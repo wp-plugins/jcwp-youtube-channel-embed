@@ -8,7 +8,7 @@ ul.jcorg-yt-thumbnails li{
 	list-style:none !important;
 	float:left !important;
 	line-height:110%;
-	margin:10px;
+	margin:5px;
 }
 .jcorg-yt-thumbnails img:hover{
     border:10px solid rgba(10,10,10,0.4);
@@ -42,7 +42,4 @@ ul.jcorg-yt-thumbnails li{
 .jcorg-yt-list li {
      list-style:none !important;
      margin 0px !important;
-}
-.clearfix {
-	clear:both;
 }
