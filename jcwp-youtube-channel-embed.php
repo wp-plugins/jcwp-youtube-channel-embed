@@ -57,6 +57,9 @@
     
     add_action('wp_head','jcorgytce_inclscript',100);
     function jcorgytce_inclscript() {
+	global $post;
+
+{
         wp_enqueue_script('jquery');
         wp_enqueue_script('jcorgytce_pp',plugins_url("jquery.prettyPhoto.js",__FILE__),array('jquery'));
         wp_enqueue_script('jcorgytce_ytce',plugins_url("jcorgYoutubeUserChannelEmbed.js",__FILE__),array('jquery'));
@@ -66,6 +69,7 @@
         if(get_option('jcorgytce_linkback') =="Yes") {
             echo '<a style="display:block;height:0 !important;width:0 !important;font-size:0em !important;color:transparent !important" href="http://jaspreetchahal.org">Youtube channel embed is powered by http://jaspreetchahal.org</a>';
         }
+}
     }
      function jcorgcrYTEMShortCodeHandler($atts) {
         global $wpdb;
@@ -82,7 +86,7 @@
             "embedType"=>"frame",
             ),$atts));
         $uniq_id = uniqid("jvorgyt_");
-        return "<div id='$uniq_id'></div><dic style='clear:both'>&nbsp;</div>
+        return "<div id='$uniq_id'></div><div style='clear:both !important'>&nbsp;</div>
              <script type=\"text/javascript\">
                     jQuery(document).ready(function(){
                         jQuery(\"#$uniq_id\").jcorgYoutubeUserChannelEmbed({
