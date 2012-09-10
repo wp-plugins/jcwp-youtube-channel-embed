@@ -4,7 +4,7 @@
     Plugin URI: http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
     Description: This plugin embeds a custom channel to wordpress page or post
     Author: Jaspreet Chahal
-    Version: 1.0.1
+    Version: 1.1
     Author URI: http://jaspreetchahal.org
     License: GPLv2 or later
     */
