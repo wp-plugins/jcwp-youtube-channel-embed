@@ -4,7 +4,7 @@
     Plugin URI: http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
     Description: This plugin embeds a custom channel to wordpress page or post
     Author: Jaspreet Chahal
-    Version: 1.1
+    Version: 1.2
     Author URI: http://jaspreetchahal.org
     License: GPLv2 or later
     */
@@ -242,16 +242,16 @@
             <script type="text/javascript">
             
                 function jcorgYTChannelEmbedCreateShortCode() {
-                          var mode = jQuery("input[name$='jcorgytce_mode']").val();
+                          var mode = jQuery("input[name$='jcorgytce_mode']:checked").val();
                           var videoWidth = jQuery("input[name$='jcorgytce_video_width']").val();
                           var thumbnailWidth = jQuery("input[name$='jcorgytce_thumbnail_width']").val();
-                          var showTitle = jQuery("input[name$='jcorgytce_show_title']").val();
+                          var showTitle = jQuery("input[name$='jcorgytce_show_title']:checked").val();
                           var maxResults = jQuery("input[name$='jcorgytce_max_results']").val();
                           var startIndex = jQuery("input[name$='jcorgytce_start_index']").val();
                           var orderBy = jQuery("select[name$='jcorgytce_order_by']").val();
                           var filterKeyword = jQuery("input[name$='jcorgytce_filter_by_keyword']").val();
                           var channelUserName = jQuery("input[name$='jcorgytce_channel_name']").val();
-                          var useIncl = jQuery("input[name$='jcorgytce_use']").val();
+                          var useIncl = jQuery("input[name$='jcorgytce_use']:checked").val();
                           jQuery("#jcorgyt-shortcode").html('[jcorg_youtube_channel mode="'+mode+'" videoWidth="'+videoWidth+'" thumbnailWidth="'+thumbnailWidth+'" showTitle="'+showTitle+'" maxResults="'+maxResults+'" startIndex="'+startIndex+'" orderBy="'+orderBy+'" filterKeyword="'+filterKeyword+'" channelName="'+channelUserName+'" embedType="'+useIncl+'"]');
                           return false;
                 }
