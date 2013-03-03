@@ -3,8 +3,8 @@
     Plugin Name: jcwp youtube channel embed
     Plugin URI: http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
     Description: This plugin embeds a custom channel to wordpress page or post
-    Author: Jaspreet Chahal
-    Version: 1.2
+    Author: JasChahal
+    Version: 1.5
     Author URI: http://jaspreetchahal.org
     License: GPLv2 or later
     */
@@ -32,6 +32,7 @@
             add_option('jcorgytce_order_by',"published");
             add_option('jcorgytce_filter_by_keyword',"");
             add_option('jcorgytce_channel_name',"");
+            add_option('jcorgytce_thumb_quality',"1");
             add_option('jcorgytce_use',"frame");
             add_option('jcorgytce_linkback',"no");
     }
@@ -50,7 +51,8 @@
         register_setting("jcorgytce-setting","jcorgytce_order_by");     
         register_setting("jcorgytce-setting","jcorgytce_filter_by_keyword");     
         register_setting("jcorgytce-setting","jcorgytce_channel_name");     
-        register_setting("jcorgytce-setting","jcorgytce_use");     
+        register_setting("jcorgytce-setting","jcorgytce_thumb_quality");
+        register_setting("jcorgytce-setting","jcorgytce_use");
         register_setting("jcorgytce-setting","jcorgytce_linkback");    
         wp_enqueue_script('jquery');
     }   
@@ -83,6 +85,7 @@
             "orderby"=>"published",
             "filterkeyword"=>"none",
             "channelname"=>"jassiechahal",
+            "thumbquality"=>"1",
             "embedType"=>"frame",
             ),$atts));
         $uniq_id = uniqid("jvorgyt_");
@@ -96,6 +99,7 @@
                             showTitle:".($showtitle == 'yes'?'true':'false').",
                             maxResults:'".($maxresults?$maxresults:6)."',
                             startIndex:'".($startindex?$startindex:1)."',
+                            thumbQuality:'".($thumbquality != ''?$thumbquality:0)."',
                             orderBy:'".($orderby?$orderby:'published')."',
                             filterKeyword:'".($filterkeyword != 'none'?$filterkeyword:'')."',
                             channelUserName:'$channelname',
@@ -205,8 +209,21 @@
                             value="no" 
                             /> No 
                     </td>
-                </tr>  
-                <tr valign="top">
+                </tr>
+        <tr valign="top">
+            <th scope="row">Thumb Quality</th>
+            <td><input type="radio" name="jcorgytce_thumb_quality" <?php if(get_option('jcorgytce_thumb_quality') == "0" || get_option('jcorgytce_thumb_quality') == "") echo "checked='checked'";?>
+                       value="0"
+                    /> High
+                <input type="radio" name="jcorgytce_thumb_quality" <?php if(get_option('jcorgytce_thumb_quality') == "1" ) echo "checked='checked'";?>
+                       value="1"
+                        /> Medium
+                <input type="radio" name="jcorgytce_thumb_quality" <?php if(get_option('jcorgytce_thumb_quality') == "2" ) echo "checked='checked'";?>
+                       value="2"
+                        /> Low
+            </td>
+        </tr>
+        <tr valign="top">
                     <th scope="row">Embed using</th>
                     <td><input type="radio" name="jcorgytce_use" <?php if(get_option('jcorgytce_use') == "frame" || get_option('jcorgytce_use') == "") echo "checked='checked'";?>
                             value="frame" 
@@ -252,7 +269,8 @@
                           var filterKeyword = jQuery("input[name$='jcorgytce_filter_by_keyword']").val();
                           var channelUserName = jQuery("input[name$='jcorgytce_channel_name']").val();
                           var useIncl = jQuery("input[name$='jcorgytce_use']:checked").val();
-                          jQuery("#jcorgyt-shortcode").html('[jcorg_youtube_channel mode="'+mode+'" videoWidth="'+videoWidth+'" thumbnailWidth="'+thumbnailWidth+'" showTitle="'+showTitle+'" maxResults="'+maxResults+'" startIndex="'+startIndex+'" orderBy="'+orderBy+'" filterKeyword="'+filterKeyword+'" channelName="'+channelUserName+'" embedType="'+useIncl+'"]');
+                          var thumbQuality = jQuery("input[name$='jcorgytce_thumb_quality']:checked").val();
+                          jQuery("#jcorgyt-shortcode").html('[jcorg_youtube_channel mode="'+mode+'" videoWidth="'+videoWidth+'" thumbQuality="'+thumbQuality+'" thumbnailWidth="'+thumbnailWidth+'" showTitle="'+showTitle+'" maxResults="'+maxResults+'" startIndex="'+startIndex+'" orderBy="'+orderBy+'" filterKeyword="'+filterKeyword+'" channelName="'+channelUserName+'" embedType="'+useIncl+'"]');
                           return false;
                 }
                 function jcorgSelectText() {
