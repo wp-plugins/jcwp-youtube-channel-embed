@@ -4,7 +4,7 @@
     Plugin URI: http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
     Description: This plugin embeds a custom channel to wordpress page or post
     Author: JasChahal
-    Version: 1.5
+    Version: 1.5.1
     Author URI: http://jaspreetchahal.org
     License: GPLv2 or later
     */
@@ -57,6 +57,12 @@
         wp_enqueue_script('jquery');
     }   
     
+    add_action('wp_footer','jcorgytce_inclscript_foot',100);
+	function jcorgytce_inclscript_foot() {
+		if(get_option('jcorgytce_linkback') =="Yes") {
+            echo '<a style="margin-left:45%;color:#f1f1f1;font-size:0.2em !important;" href="http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin">Youtube channel embed is powered by http://jaspreetchahal.org</a>';
+        }
+	}
     add_action('wp_head','jcorgytce_inclscript',100);
     function jcorgytce_inclscript() {
 	global $post;
@@ -68,9 +74,7 @@
         wp_enqueue_style('jcorgytce_ppstyle',plugins_url("css/prettyPhoto.css",__FILE__));
         wp_enqueue_style('jcorgytce_ytcestyle',plugins_url("css/jcYoutubeChannelEmbedd.css",__FILE__));
         
-        if(get_option('jcorgytce_linkback') =="Yes") {
-            echo '<a style="display:block;height:0 !important;width:0 !important;font-size:0em !important;color:transparent !important" href="http://jaspreetchahal.org">Youtube channel embed is powered by http://jaspreetchahal.org</a>';
-        }
+        
 }
     }
      function jcorgcrYTEMShortCodeHandler($atts) {
@@ -244,10 +248,10 @@
                     </select>
                </tr>
                <tr valign="top">
-                    <th scope="row">Include invisible 'Content protected by' link</th>
+                    <th scope="row">Place 'protected by' link</th>
                     <td><input type="checkbox" name="jcorgytce_linkback"
                             value="Yes" <?php if(get_option('jcorgytce_linkback') =="Yes") echo "checked='checked'";?> /> <br>
-                            <strong>An invisible link will be placed in the footer which points to author's website</strong></td>
+                            <strong>An link will be placed in the footer which points to author's website</strong></td>
                 </tr> 
         </table>
         <p class="submit">
