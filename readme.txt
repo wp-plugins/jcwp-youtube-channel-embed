@@ -6,7 +6,7 @@ Tags: youtube, channel, embed, custom channel, custom youtube channel
 Requires at least: 2.8
 Version: 1.5.1
 Tested up to: 3.5.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 
 This plugin embeds a custom channel to wordpress page or post
 
@@ -48,6 +48,7 @@ All my wordpress plugins can be found either under my account info or http://jas
 
 = 1.5.1 =
 * Moved optional back link to footer.
+.
 
 
 == Screenshots ==-

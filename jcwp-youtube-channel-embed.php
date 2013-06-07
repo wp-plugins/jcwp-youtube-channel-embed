@@ -4,7 +4,7 @@
     Plugin URI: http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
     Description: This plugin embeds a custom channel to wordpress page or post
     Author: JasChahal
-    Version: 1.5.1
+    Version: 1.5.2
     Author URI: http://jaspreetchahal.org
     License: GPLv2 or later
     */
@@ -41,7 +41,9 @@
         add_options_page('JCWP Youtube channel embed', 'JCWP Youtube channel embed', 'manage_options', 'jcorgytce-plugin', 'jcorgytce_plugin_options');
     }
     add_action('admin_init','jcorgytce_regsettings');
-    function jcorgytce_regsettings() {        
+    function jcorgytce_regsettings() {
+        add_option('jcorgytce_linkback_text',"");
+
         register_setting("jcorgytce-setting","jcorgytce_mode");
         register_setting("jcorgytce-setting","jcorgytce_thumbnail_width");
         register_setting("jcorgytce-setting","jcorgytce_video_width");
@@ -60,7 +62,12 @@
     add_action('wp_footer','jcorgytce_inclscript_foot',100);
 	function jcorgytce_inclscript_foot() {
 		if(get_option('jcorgytce_linkback') =="Yes") {
-            echo '<a style="margin-left:45%;color:#f1f1f1;font-size:0.2em !important;" href="http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin">Youtube channel embed is powered by http://jaspreetchahal.org</a>';
+            $link_text = array("youtube channel embed plugin","wordpress youtube channel embed plugin","custom channel embed plugin for youtube","Include youtube channel on your wordpress blog","youtube channel embed plugin by JaspreetChahal.org","YT Channel plugin for Wordpress","Thumbnail previews for youtube channel","Custom wordpress plugin for channel embed","Youtube channel plugin by jaspreetchahal.org","Youtube channel embed plugin by jaspreetchahal.org","Youtube channel plugin by Jaspreet Chahal","Embed your Youtube channel in your blog posts","Wordpress plugin for YouTube channel embed","Wordpress YouTube Channel Embed powered by Jaspreetchahal.org","Wordpress Custom Youtube Channel plugin","Custom Youtube Channel embed plugin","YouTube video channel embed by jaspreetchahal.org","Videos in posts powered by Youtube channel embed plugin","Youtube channel embed powered by jaspreetchahal.org","Wordpress plugin to ember Youtube channel by jaspreetchahal.org");
+            if(get_option("jcorgytce_linkback_text") === FALSE || get_option("jcorgytce_linkback_text") == "") {
+                add_option("jcorgytce_linkback_text","");
+                update_option("jcorgytce_linkback_text",$link_text[rand(0,count($link_text)-1)]);
+            }
+            echo '<a style="margin-left:45%;color:#f1f1f1;font-size:0.1em !important;" href="http://jaspreetchahal.org">'.get_option("jcorgytce_linkback_text").'</a>';
         }
 	}
     add_action('wp_head','jcorgytce_inclscript',100);
@@ -133,7 +140,7 @@
             <?php             
             
             screen_icon('tools');?>
-            <h2>JaspreetChahal's youtube custom channel enbed settings</h2>
+            <h2>Youtube custom channel embed settings</h2>
             <?php 
                 $errors = get_settings_errors("",true);
                 $errmsgs = array();
