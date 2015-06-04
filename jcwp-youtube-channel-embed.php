@@ -4,7 +4,7 @@
     Plugin URI: http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
     Description: This plugin embeds a custom channel to wordpress page or post
     Author: JasChahal
-    Version: 1.5.2
+    Version: 2.0.0
     Author URI: http://jaspreetchahal.org
     License: GPLv2 or later
     */
@@ -35,11 +35,19 @@
             add_option('jcorgytce_thumb_quality',"1");
             add_option('jcorgytce_use',"frame");
             add_option('jcorgytce_linkback',"no");
+            add_option('jcorgytce_ytkey',"");
+            add_option('jcorgytce_playlist',"");
+            add_option('jcorgytce_filter_by_videos',"");
     }
     add_action("admin_menu","jcorgytce_menu");
     function jcorgytce_menu() {
         add_options_page('JCWP Youtube channel embed', 'JCWP Youtube channel embed', 'manage_options', 'jcorgytce-plugin', 'jcorgytce_plugin_options');
     }
+
+add_action( 'admin_enqueue_scripts', 'jcorgyt_emb' );
+function jcorgyt_emb(){
+	wp_enqueue_script('jcorgcr_admin_yt',plugins_url("jcwp-youtube-channel-embed/jcorgYoutubeUserChannelEmbed.js"), array('jquery', 'jquery-ui-core', 'jquery-ui-dialog'),'4.6');
+}
     add_action('admin_init','jcorgytce_regsettings');
     function jcorgytce_regsettings() {
         add_option('jcorgytce_linkback_text',"");
@@ -56,8 +64,12 @@
         register_setting("jcorgytce-setting","jcorgytce_thumb_quality");
         register_setting("jcorgytce-setting","jcorgytce_use");
         register_setting("jcorgytce-setting","jcorgytce_linkback");    
+        register_setting("jcorgytce-setting","jcorgytce_ytkey");
+        register_setting("jcorgytce-setting","jcorgytce_playlist");
+        register_setting("jcorgytce-setting","jcorgytce_filter_by_videos");
         wp_enqueue_script('jquery');
-    }   
+
+    }
     
     add_action('wp_footer','jcorgytce_inclscript_foot',100);
 	function jcorgytce_inclscript_foot() {
@@ -86,7 +98,7 @@
     }
      function jcorgcrYTEMShortCodeHandler($atts) {
         global $wpdb;
-        extract(shortcode_atts(array(
+	     extract(shortcode_atts(array(
             "mode"=>"list",
             "videowidth"=>"640",
             "thumbnailwidth"=>"240",
@@ -98,6 +110,9 @@
             "channelname"=>"jassiechahal",
             "thumbquality"=>"1",
             "embedType"=>"frame",
+            "ytkey"=>"",
+            "playlistid"=>"",
+            "videos"=>"",
             ),$atts));
         $uniq_id = uniqid("jvorgyt_");
         return "<div id='$uniq_id'></div><div style='clear:both !important'>&nbsp;</div>
@@ -114,6 +129,9 @@
                             orderBy:'".($orderby?$orderby:'published')."',
                             filterKeyword:'".($filterkeyword != 'none'?$filterkeyword:'')."',
                             channelUserName:'$channelname',
+                            ytkey:'$ytkey',
+                            playlistid:'$playlistid',
+                            videos:'$videos',
                             useIncl:'".($embedtype?$embedtype:'frame')."'
                         });     
                     });
@@ -174,31 +192,54 @@
                             /> Thumbnails 
                     </td>
                 </tr>
+			    <tr valign="top">
+				    <th scope="row"><strong style="color:green">Important</strong> Youtube API key for v3 stuff</th>
+				    <td><input type="text" name="jcorgytce_ytkey" id="jcorgytce_ytkey"
+				               value="<?php echo get_option('jcorgytce_ytkey'); ?>"  style="padding:5px" size="40"/>
+
+					    <br/>
+					    <strong>Perhaps Important: </strong> When creating a Youtune V3 API key, restrict it by domain. Remember that it can take few minutes for your key to become active. <a href="https://developers.google.com/youtube/registering_an_application" target="_blank"> Start here</a> for your youtube API key.
+				    </td>
+			    </tr>
                 <tr valign="top">
                     <th scope="row">Channel name</th>
-                    <td><input type="text" name="jcorgytce_channel_name"
+                    <td><input type="text" name="jcorgytce_channel_name" id="jcorgytce_channel_name"
                             value="<?php echo get_option('jcorgytce_channel_name'); ?>"  style="padding:5px" size="40"/>
                     </td>
-                </tr> 
+                </tr>
+			    <tr valign="top">
+				    <th scope="row"><strong style="color:green">Important</strong> Playlist ID (if you know it then enter it else click on <strong>get</strong> button)</th>
+				    <td><input type="text" name="jcorgytce_playlist" id="jcorgytce_playlist"
+				               value="<?php echo get_option('jcorgytce_playlist'); ?>"  style="padding:5px" size="40"/>
+					    <button id="" type="button" onclick="getYoutubePlaylistID(); ">Get</button>
+				    </td>
+			    </tr>
                 <tr valign="top">
                     <th scope="row">Maximum results</th>
                     <td><input type="number" name="jcorgytce_max_results"
                             value="<?php echo get_option('jcorgytce_max_results'); ?>"  style="padding:5px" size="40"/>
                     </td>
-                </tr> 
+                </tr>
                 <tr valign="top">
-                    <th scope="row">Start Index</th>
+                    <th scope="row">Start Index <strong style="color:red">[deprecated]</strong></th>
                     <td><input type="number" name="jcorgytce_start_index"
                             value="<?php echo get_option('jcorgytce_start_index'); ?>"  style="padding:5px" size="40"/><br>(Pointer from where the videos should be shown. Handy, if you want to show videos from a given position)
                     </td>
                 </tr> 
                
                 <tr valign="top">
-                    <th scope="row">Filter by keyword</th>
+                    <th scope="row">Filter by keyword <strong style="color:red">[deprecated]</strong></th>
                     <td><input type="text" name="jcorgytce_filter_by_keyword"
                             value="<?php echo get_option('jcorgytce_filter_by_keyword'); ?>"  style="padding:5px" size="40"/><br>(Look for keyword in the video title)
                     </td>
-                </tr> 
+                </tr>
+
+                <tr valign="top">
+                    <th scope="row">Filter by video ids COMMA SEPARATED <strong style="color:green">[Use this to filter by video IDS]</strong></th>
+                    <td><input type="text" name="jcorgytce_filter_by_videos"
+                            value="<?php echo get_option('jcorgytce_filter_by_videos'); ?>"  style="padding:5px" size="40"/><br>
+                    </td>
+                </tr>
                 <tr valign="top">
                     <th scope="row">Thumbnail width </th>
                     <td><input type="number" name="jcorgytce_thumbnail_width"
@@ -245,7 +286,7 @@
                     </td>
                 </tr>  
                 <tr valign="top">
-                    <th scope="row">Sort By</th>
+                    <th scope="row">Sort By <strong style="color:red">[deprecated]</strong></th>
                     <td> 
                     <select name="jcorgytce_order_by">
                     <option value="published" <?php if(get_option('jcorgytce_order_by') == "published"){  _e('selected');}?> >Publish date</option>
@@ -255,11 +296,9 @@
                     </select>
                </tr>
                <tr valign="top">
-                    <th scope="row">Place 'protected by' link</th>
-                    <td><input type="checkbox" name="jcorgytce_linkback"
-                            value="Yes" <?php if(get_option('jcorgytce_linkback') =="Yes") echo "checked='checked'";?> /> <br>
-                            <strong>An link will be placed in the footer which points to author's website</strong></td>
-                </tr> 
+                    <th scope="row">Place link back to jaspreetchahal.org</th>
+                    <td>NO LONGER REQUIRED!! -- Please consider donations instead. It takes time to maintain this stuff. for example: updating this plugin to use Youtube API v3 need many hours of unpaid work. thanks.</td>
+                </tr>
         </table>
         <p class="submit">
             <input type="submit" class="button-primary"
@@ -268,8 +307,7 @@
         </p>          
             </form>
             <script type="text/javascript">
-            
-                function jcorgYTChannelEmbedCreateShortCode() {
+	            function jcorgYTChannelEmbedCreateShortCode() {
                           var mode = jQuery("input[name$='jcorgytce_mode']:checked").val();
                           var videoWidth = jQuery("input[name$='jcorgytce_video_width']").val();
                           var thumbnailWidth = jQuery("input[name$='jcorgytce_thumbnail_width']").val();
@@ -279,27 +317,33 @@
                           var orderBy = jQuery("select[name$='jcorgytce_order_by']").val();
                           var filterKeyword = jQuery("input[name$='jcorgytce_filter_by_keyword']").val();
                           var channelUserName = jQuery("input[name$='jcorgytce_channel_name']").val();
+                          var ytkey = jQuery("input[name$='jcorgytce_ytkey']").val();
+                          var playlistid = jQuery("input[name$='jcorgytce_playlist']").val();
+                          var videos = jQuery("input[name$='jcorgytce_filter_by_videos']").val();
                           var useIncl = jQuery("input[name$='jcorgytce_use']:checked").val();
                           var thumbQuality = jQuery("input[name$='jcorgytce_thumb_quality']:checked").val();
-                          jQuery("#jcorgyt-shortcode").html('[jcorg_youtube_channel mode="'+mode+'" videoWidth="'+videoWidth+'" thumbQuality="'+thumbQuality+'" thumbnailWidth="'+thumbnailWidth+'" showTitle="'+showTitle+'" maxResults="'+maxResults+'" startIndex="'+startIndex+'" orderBy="'+orderBy+'" filterKeyword="'+filterKeyword+'" channelName="'+channelUserName+'" embedType="'+useIncl+'"]');
+                          jQuery("#jcorgyt-shortcode").html('[jcorg_youtube_channel mode="'+mode+'" videoWidth="'+videoWidth+'" thumbQuality="'+thumbQuality+'" thumbnailWidth="'+thumbnailWidth+'" showTitle="'+showTitle+'" ' +
+
+	                          ' showTitle="'+showTitle+'" ' +
+	                          ' ytkey="'+ytkey+'" ' +
+	                          ' playlistid="'+playlistid+'" ' +
+	                          ' videos="'+videos+'" ' +
+	                          ' maxResults="'+maxResults+'" startIndex="'+startIndex+'" orderBy="'+orderBy+'" filterKeyword="'+filterKeyword+'" channelName="'+channelUserName+'" embedType="'+useIncl+'"]');
                           return false;
                 }
                 function jcorgSelectText() {
-                    var text = document.getElementById('jcorgyt-shortcode');
-                    if (jQuery.browser.msie) {
-                        var range = document.body.createTextRange();
-                        range.moveToElementText(text);
-                        range.select();
-                    } else if (jQuery.browser.mozilla || jQuery.browser.opera) {
-                        var selection = window.getSelection();
-                        var range = document.createRange();
-                        range.selectNodeContents(text);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    } else if (jQuery.browser.safari) {
-                        var selection = window.getSelection();
-                        selection.setBaseAndExtent(text, 0, text, 1);
-                    }
+                    var node = document.getElementById('jcorgyt-shortcode');
+	                if ( document.selection ) {
+		                var range = document.body.createTextRange();
+		                range.moveToElementText( node  );
+		                range.select();
+	                } else if ( window.getSelection ) {
+		                var range = document.createRange();
+		                range.selectNodeContents( node );
+		                window.getSelection().removeAllRanges();
+		                window.getSelection().addRange( range );
+	                }
+	                return true;
                 }
             </script>
             <input type="button" class="button-primary"

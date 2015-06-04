@@ -4,9 +4,9 @@ Plugin URI: http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
 Donate link:  http://jaspreetchahal.org/wordpress-youtube-channel-embed-plugin
 Tags: youtube, channel, embed, custom channel, custom youtube channel
 Requires at least: 2.8
-Version: 1.5.2
-Tested up to: 4.2
-Stable tag: 1.5.2
+Version: 2.0.0
+Tested up to: 4.2.0
+Stable tag: 2.0.0
 
 This plugin embeds a custom channel to wordpress page or post
 
@@ -48,7 +48,12 @@ All my wordpress plugins can be found either under my account info or http://jas
 
 = 1.5.1 =
 * Moved optional back link to footer.
+
+
+= 2.0.0 =
+* Compatible with Youtube API version 3
 .
+
 
 
 == Screenshots ==-
